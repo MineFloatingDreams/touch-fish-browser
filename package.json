@@ -1,0 +1,66 @@
+{
+  "name": "floating-mini-browser",
+  "version": "1.8.0",
+  "description": "Windows 悬浮小浏览器，支持可收起浏览栏、透明度、置顶、托盘和全局老板键。",
+  "main": "src/main.js",
+  "author": "Codex",
+  "license": "MIT",
+  "private": true,
+  "scripts": {
+    "start": "electron .",
+    "check": "node --check src/main.js && node --check src/preload.js && node --check src/core.js && node --check src/settings-store.js && node --check src/ui/renderer.js && node --check scripts/clean-build.js",
+    "test": "node --test test/*.test.js",
+    "test:integration": "node test/integration-smoke.mjs",
+    "clean:build": "node scripts/clean-build.js",
+    "prebuild:portable": "npm run clean:build",
+    "build:portable": "electron-builder --win portable --x64",
+    "prebuild:win": "npm run clean:build",
+    "build:win": "electron-builder --win nsis portable --x64"
+  },
+  "devDependencies": {
+    "electron": "42.7.0",
+    "electron-builder": "26.15.3"
+  },
+  "build": {
+    "appId": "com.codex.floatingminibrowser",
+    "productName": "悬浮小浏览器",
+    "electronDist": "vendor/electron",
+    "asar": true,
+    "directories": {
+      "output": "./build",
+      "buildResources": "build"
+    },
+    "files": [
+      "src/**/*",
+      "build/icon.png",
+      "build/ads/**/*",
+      "package.json"
+    ],
+    "win": {
+      "icon": "build/icon.png",
+      "target": [
+        {
+          "target": "nsis",
+          "arch": ["x64"]
+        },
+        {
+          "target": "portable",
+          "arch": ["x64"]
+        }
+      ]
+    },
+    "nsis": {
+      "artifactName": "FloatingMiniBrowser-Setup-${version}-${arch}.${ext}",
+      "oneClick": false,
+      "perMachine": false,
+      "allowToChangeInstallationDirectory": true,
+      "createDesktopShortcut": true,
+      "createStartMenuShortcut": true,
+      "shortcutName": "悬浮小浏览器",
+      "runAfterFinish": true
+    },
+    "portable": {
+      "artifactName": "FloatingMiniBrowser-Portable-${version}-${arch}.${ext}"
+    }
+  }
+}

@@ -1,0 +1,150 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self' data:; connect-src 'none'; frame-src 'none'; object-src 'none'; base-uri 'none'; form-action 'none'">
+    <title>悬浮小浏览器</title>
+    <link rel="stylesheet" href="styles.css">
+  </head>
+  <body>
+    <main class="app-shell">
+      <header class="titlebar">
+        <div class="brand">
+          <span class="brand-icon" aria-hidden="true">F</span>
+          <div class="brand-copy">
+            <strong>悬浮小浏览器</strong>
+            <span class="page-title">未打开网页</span>
+          </div>
+        </div>
+        <div class="window-actions no-drag">
+          <button class="title-button mouse-release-button" type="button" title="释放鼠标 (Alt+Shift+M)" aria-label="释放鼠标">↖</button>
+          <button class="title-button pin-button" type="button" title="切换置顶" aria-label="切换置顶">⌖</button>
+          <button class="title-button controls-toggle-button" type="button" title="隐藏标签与操作栏" aria-label="隐藏标签与操作栏">▴</button>
+          <button class="title-button minimize-button" type="button" title="最小化" aria-label="最小化">—</button>
+          <button class="title-button close-button" type="button" title="收进托盘" aria-label="收进托盘">×</button>
+        </div>
+      </header>
+
+      <section class="browser-controls no-drag" aria-label="标签页与浏览器操作">
+        <div class="tabs-bar" aria-label="标签页管理">
+          <div class="tab-strip" role="tablist" aria-label="已打开的标签页"></div>
+          <button class="new-tab-button" type="button" title="新建标签页 (Ctrl+T)" aria-label="新建标签页">+</button>
+        </div>
+        <div class="navigation-bar" aria-label="浏览器导航">
+          <button class="nav-button back-button" type="button" title="后退" aria-label="后退" disabled>‹</button>
+          <button class="nav-button forward-button" type="button" title="前进" aria-label="前进" disabled>›</button>
+          <button class="nav-button reload-button" type="button" title="刷新" aria-label="刷新">↻</button>
+          <form class="address-form">
+            <span class="security-dot" title="仅允许 HTTP/HTTPS"></span>
+            <input class="address-input" type="text" inputmode="url" autocomplete="off" spellcheck="false" maxlength="2048" placeholder="输入网址" aria-label="网址">
+          </form>
+          <button class="nav-button external-button" type="button" title="在默认浏览器中打开" aria-label="在默认浏览器中打开">↗</button>
+          <button class="nav-button settings-button" type="button" title="设置" aria-label="设置">⚙</button>
+        </div>
+      </section>
+      <div class="loading-line" aria-hidden="true"><span></span></div>
+
+      <section class="local-stage">
+        <div class="start-screen">
+          <div class="start-orb">↗</div>
+          <h1>在独立 Chromium 视图中浏览</h1>
+          <p>网页不再通过 iframe 加载，因此不会受到网站嵌入策略限制。</p>
+          <div class="quick-sites" aria-label="常用网站"></div>
+          <div class="feature-pills"><span>真实浏览会话</span><span>全局老板键</span><span>本机保存</span></div>
+        </div>
+        <div class="error-banner" role="alert"><span class="error-message"></span><button class="error-retry" type="button">重试</button></div>
+
+        <aside class="settings-panel" aria-label="应用设置">
+          <div class="settings-heading">
+            <div><span class="eyebrow">PREFERENCES</span><h2>应用设置</h2></div>
+            <button class="settings-done" type="button">关闭标签</button>
+          </div>
+
+          <section class="setting-card">
+            <div class="setting-title"><span>窗口透明度</span><output class="opacity-output">90%</output></div>
+            <input class="opacity-range" type="range" min="30" max="100" step="1" value="90">
+            <p>透明度会作用于工具栏、网页和广告画面。</p>
+          </section>
+
+          <section class="setting-card">
+            <div class="setting-title"><span>广告窗口尺寸</span></div>
+            <div class="size-fields">
+              <label><span>宽度</span><input class="ad-width-input" type="number" min="200" max="4096" step="1" value="440"></label>
+              <span aria-hidden="true">×</span>
+              <label><span>高度</span><input class="ad-height-input" type="number" min="200" max="4096" step="1" value="586"></label>
+            </div>
+            <p>进入广告模式时使用该尺寸，并自动移动到当前显示器右下角。</p>
+          </section>
+
+          <section class="setting-card">
+            <div class="setting-title"><span>老板键</span><span class="shortcut-registration"></span></div>
+            <button class="shortcut-recorder" type="button">Alt+Shift+A</button>
+            <p>点击后按下新的组合键；必须包含 Ctrl、Alt 或 Shift。注册失败时保留原快捷键。</p>
+            <div class="inline-status shortcut-status" role="status"></div>
+            <div class="setting-subtitle">按下后的动作</div>
+            <label class="choice-row"><input class="boss-ad-radio" type="radio" name="boss-key-action" value="ad">显示广告画面</label>
+            <label class="choice-row"><input class="boss-hide-radio" type="radio" name="boss-key-action" value="hide">静音所有网页并隐藏窗口</label>
+          </section>
+
+          <section class="setting-card switches">
+            <label class="switch-row">
+              <span><strong>保持置顶</strong><small class="top-help">让窗口浮在其他应用上方</small></span>
+              <input class="top-checkbox" type="checkbox"><i></i>
+            </label>
+            <label class="switch-row">
+              <span><strong>开机启动</strong><small class="autostart-help">默认关闭，可随时更改</small></span>
+              <input class="autostart-checkbox" type="checkbox"><i></i>
+            </label>
+            <label class="switch-row">
+              <span><strong>移出窗口后完全透明</strong><small>鼠标移回窗口区域时恢复此前透明度</small></span>
+              <input class="mouse-transparency-checkbox" type="checkbox"><i></i>
+            </label>
+          </section>
+
+          <section class="setting-card">
+            <div class="setting-title"><span>关闭按钮行为</span></div>
+            <label class="choice-row"><input class="close-tray-radio" type="radio" name="close-behavior" value="tray">隐藏到系统托盘</label>
+            <label class="choice-row"><input class="close-quit-radio" type="radio" name="close-behavior" value="quit">完全退出应用</label>
+            <p>同时作用于主窗口和广告画面右上角的关闭按钮。</p>
+          </section>
+
+          <section class="setting-card">
+            <div class="setting-title"><span>首页书签</span><span class="bookmark-count"></span></div>
+            <button class="secondary-button import-bookmarks" type="button">导入浏览器书签 HTML</button>
+            <button class="secondary-button danger remove-bookmarks" type="button">清除导入的书签</button>
+            <p>支持 Chrome、Edge、Firefox 等浏览器导出的 HTML；最多导入 100 个 HTTP/HTTPS 书签。内置预设不会被删除。</p>
+            <div class="inline-status bookmark-status" role="status"></div>
+          </section>
+
+          <section class="setting-card">
+            <div class="setting-title"><span>广告画面</span></div>
+            <label class="choice-row"><input class="builtin-radio" type="radio" name="ad-mode" value="builtin">内置广告（10 张轮播）</label>
+            <label class="choice-row"><input class="custom-radio" type="radio" name="ad-mode" value="custom">自定义图片轮播</label>
+            <button class="secondary-button choose-image" type="button">选择轮播图片（最多 20 张）</button>
+            <img class="ad-preview" alt="自定义广告预览">
+            <button class="secondary-button danger remove-image" type="button">删除全部自定义图片</button>
+            <p>可一次多选 PNG、JPEG 或 WebP；最多 20 张、每张最大 2 MB。图片仅复制到本机应用数据目录。</p>
+            <div class="inline-status image-status" role="status"></div>
+          </section>
+
+          <section class="security-card">
+            <strong>安全策略</strong>
+            <p>远程网页无法访问 Node 或 Electron API。仅当前可见标签可申请鼠标锁定；摄像头、麦克风、定位、通知和设备权限全部拒绝。</p>
+          </section>
+
+          <button class="quit-button" type="button">彻底退出应用</button>
+        </aside>
+      </section>
+
+      <section class="ad-screen" aria-label="广告画面">
+        <img class="ad-carousel-image" alt="促销广告">
+        <button class="ad-close-button" type="button" title="关闭广告" aria-label="关闭广告">×</button>
+        <span class="ad-counter" aria-live="polite"></span>
+      </section>
+
+      <div class="toast" role="status"></div>
+    </main>
+    <script src="renderer.js"></script>
+  </body>
+</html>

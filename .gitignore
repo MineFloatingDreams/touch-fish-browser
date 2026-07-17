@@ -1,0 +1,23 @@
+node_modules/
+dist/
+*.log
+test-artifacts/
+
+# electron-builder outputs; keep only source-controlled packaging resources.
+build/*
+!build/icon.png
+!build/ads/
+build/ads/*
+!build/ads/ad-01.png
+!build/ads/ad-02.png
+!build/ads/ad-03.png
+!build/ads/ad-04.png
+!build/ads/ad-05.png
+!build/ads/ad-06.png
+!build/ads/ad-07.png
+!build/ads/ad-08.png
+!build/ads/ad-09.png
+!build/ads/ad-10.png
+
+# The offline Electron archive exceeds GitHub's 100 MB per-file limit.
+vendor/electron/*.zip
