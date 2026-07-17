@@ -1,16 +1,16 @@
 # 悬浮小浏览器（Windows x64）
 
-一个基于 Electron 42 与 `WebContentsView` 的独立桌面小浏览器。网页不是通过 iframe 嵌入，因此不会受网站 `X-Frame-Options` 或 CSP `frame-ancestors` 的 iframe 限制。v1.8.0 支持最多 12 个相互独立的网页标签、可收起的合并浏览栏、本地设置标签、首页书签、云游戏鼠标强制释放，以及可配置的老板键动作。
+一个基于 Electron 42 与 `WebContentsView` 的独立桌面小浏览器。网页不是通过 iframe 嵌入，因此不会受网站 `X-Frame-Options` 或 CSP `frame-ancestors` 的 iframe 限制。v1.8.1 支持最多 12 个相互独立的网页标签、可收起的合并浏览栏、本地设置标签、首页书签、云游戏鼠标强制释放，以及可配置的老板键动作。
 
 ## 安装与运行
 
 ### 安装版
 
-运行 `FloatingMiniBrowser-Setup-1.8.0-x64.exe`，按向导安装。默认按当前用户安装，可选择安装目录，并创建桌面与开始菜单快捷方式。
+运行 `FloatingMiniBrowser-Setup-1.8.1-x64.exe`，按向导安装。默认按当前用户安装，可选择安装目录，并创建桌面与开始菜单快捷方式。
 
 ### 便携版
 
-直接运行 `FloatingMiniBrowser-Portable-1.8.0-x64.exe`，无需安装。设置和网站会话仍会保存在 Windows 用户应用数据目录中，因此“便携”仅指程序文件无需安装。
+直接运行 `FloatingMiniBrowser-Portable-1.8.1-x64.exe`，无需安装。设置和网站会话仍会保存在 Windows 用户应用数据目录中，因此“便携”仅指程序文件无需安装。
 
 如需自行构建，先执行 `npm ci`，再在项目目录的 CMD 中执行 `npm.cmd run build:portable`。构建配置从 `vendor\electron` 读取 Electron 42.7.0 Windows x64 ZIP；该压缩包超过 GitHub 单文件限制，不纳入源码仓库，需将官方 `electron-v42.7.0-win32-x64.zip` 放入此目录，并用同目录的 `SHA256SUMS.txt` 校验。electron-builder 会将安装包、便携版和解包目录输出到 `build`；每次打包前会读取当前输出配置，并自动清理上一轮明确识别的构建产物。
 

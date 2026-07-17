@@ -1,6 +1,6 @@
 {
   "name": "floating-mini-browser",
-  "version": "1.8.0",
+  "version": "1.8.1",
   "description": "Windows 悬浮小浏览器，支持可收起浏览栏、透明度、置顶、托盘和全局老板键。",
   "main": "src/main.js",
   "author": "Codex",

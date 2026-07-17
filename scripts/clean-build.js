@@ -6,8 +6,11 @@ const path = require("node:path");
 const GENERATED_DIRECTORIES = new Set([
   ".icon-ico",
   "win-unpacked",
+  "win-unpacked.tmp",
   "win-ia32-unpacked",
+  "win-ia32-unpacked.tmp",
   "win-arm64-unpacked",
+  "win-arm64-unpacked.tmp",
 ]);
 
 function isGeneratedBuildEntry(name, isDirectory) {
