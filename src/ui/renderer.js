@@ -25,6 +25,10 @@ const elements = {
   errorMessage: $(".error-message"),
   errorRetry: $(".error-retry"),
   settingsDone: $(".settings-done"),
+  aboutButton: $(".about-button"),
+  aboutDialog: $(".about-dialog"),
+  aboutClose: $(".about-close"),
+  aboutVersion: $(".about-version strong"),
   opacityRange: $(".opacity-range"),
   opacityOutput: $(".opacity-output"),
   adWidthInput: $(".ad-width-input"),
@@ -149,10 +153,18 @@ function renderHomeBookmarks() {
 
 function setSettingsOpen(value) {
   settingsOpen = Boolean(value);
+  if (!settingsOpen) setAboutOpen(false);
   document.body.classList.toggle("settings-open", settingsOpen);
   elements.settingsButton.classList.toggle("active", settingsOpen);
   applyBrowserState(browserState);
   void api.setOverlayOpen(settingsOpen);
+}
+
+function setAboutOpen(value) {
+  const open = Boolean(value);
+  elements.aboutDialog.classList.toggle("show", open);
+  elements.aboutDialog.setAttribute("aria-hidden", String(!open));
+  if (open) elements.aboutClose.focus();
 }
 
 function renderTabs() {
@@ -250,6 +262,7 @@ function applyBrowserState(nextState) {
 function applyAppState(nextState) {
   if (!nextState) return;
   appState = nextState;
+  elements.aboutVersion.textContent = nextState.appVersion || "未知";
   const { settings } = nextState;
   elements.opacityRange.value = String(settings.opacity);
   elements.opacityOutput.textContent = `${settings.opacity}%`;
@@ -381,6 +394,11 @@ elements.adCloseButton.addEventListener("click", () => void api.closeToTray());
 elements.mouseReleaseButton.addEventListener("click", () => void api.releaseMouse());
 elements.settingsButton.addEventListener("click", () => setSettingsOpen(true));
 elements.settingsDone.addEventListener("click", () => setSettingsOpen(false));
+elements.aboutButton.addEventListener("click", () => setAboutOpen(true));
+elements.aboutClose.addEventListener("click", () => setAboutOpen(false));
+elements.aboutDialog.addEventListener("click", (event) => {
+  if (event.target === elements.aboutDialog) setAboutOpen(false);
+});
 
 elements.opacityRange.addEventListener("input", () => {
   const value = Number(elements.opacityRange.value);
@@ -434,6 +452,12 @@ elements.bossHideRadio.addEventListener("change", () => {
 });
 document.addEventListener("keydown", (event) => void recordShortcut(event), true);
 document.addEventListener("keydown", (event) => {
+  if (event.key === "Escape" && elements.aboutDialog.classList.contains("show")) {
+    event.preventDefault();
+    setAboutOpen(false);
+    elements.aboutButton.focus();
+    return;
+  }
   if (!event.ctrlKey || event.altKey || event.metaKey || recordingShortcut) return;
   const key = event.key.toLowerCase();
   if (key === "t") {

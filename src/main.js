@@ -197,6 +197,7 @@ function getPublicSettings() {
 
 async function getAppState() {
   return {
+    appVersion: app.getVersion(),
     settings: getPublicSettings(),
     browser: getBrowserState(),
     mode: appMode,
@@ -1298,6 +1299,22 @@ async function runSmokeTest() {
       return document.body.classList.contains("settings-open") && Boolean(document.querySelector(".settings-tab.active"));
     })()`);
     await captureMainWindow(settingsScreenshot);
+    const aboutDialogState = await mainWindow.webContents.executeJavaScript(`(async () => {
+      document.querySelector(".about-button").click();
+      await new Promise((resolve) => setTimeout(resolve, 100));
+      const dialog = document.querySelector(".about-dialog");
+      const state = {
+        visible: dialog.classList.contains("show") && dialog.getAttribute("aria-hidden") === "false",
+        title: dialog.querySelector("h2")?.textContent || "",
+        declaration: dialog.querySelector(".about-declaration")?.textContent || "",
+        version: dialog.querySelector(".about-version strong")?.textContent || "",
+        closeLabel: dialog.querySelector(".about-close")?.textContent || "",
+      };
+      dialog.querySelector(".about-close").click();
+      await new Promise((resolve) => setTimeout(resolve, 50));
+      state.closed = !dialog.classList.contains("show") && dialog.getAttribute("aria-hidden") === "true";
+      return state;
+    })()`);
     const settingsTabClosed = await mainWindow.webContents.executeJavaScript(`(async () => {
       document.querySelector(".settings-tab .tab-close").click();
       await new Promise((resolve) => setTimeout(resolve, 100));
@@ -1515,6 +1532,12 @@ async function runSmokeTest() {
       homePresetLabels,
       settingsTabOpen,
       settingsTabClosed,
+      aboutDialogVisible: aboutDialogState.visible,
+      aboutDialogTitle: aboutDialogState.title,
+      aboutDialogDeclaration: aboutDialogState.declaration,
+      aboutDialogVersion: aboutDialogState.version,
+      aboutDialogCloseLabel: aboutDialogState.closeLabel,
+      aboutDialogClosed: aboutDialogState.closed,
       importedBookmarkVisible,
       mouseTransparencyOriginalOpacity,
       mouseTransparencyOutsideOpacity,

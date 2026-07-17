@@ -133,8 +133,21 @@
             <p>远程网页无法访问 Node 或 Electron API。仅当前可见标签可申请鼠标锁定；摄像头、麦克风、定位、通知和设备权限全部拒绝。</p>
           </section>
 
+          <button class="secondary-button about-button" type="button">关于本应用</button>
           <button class="quit-button" type="button">彻底退出应用</button>
         </aside>
+      </section>
+
+      <section class="about-dialog no-drag" role="dialog" aria-modal="true" aria-labelledby="about-title" aria-hidden="true">
+        <div class="about-card">
+          <div class="about-logo" aria-hidden="true">F</div>
+          <span class="about-eyebrow">关于</span>
+          <h2 id="about-title">悬浮小浏览器</h2>
+          <p class="about-version">版本 <strong></strong></p>
+          <p class="about-declaration">本应用的代码、界面、文档、测试及内置资源完全由 OpenAI Codex 生成。</p>
+          <p>这是一款面向 Windows 的轻量悬浮浏览器，支持多标签、透明度、托盘和全局老板键。</p>
+          <button class="about-close" type="button">关闭</button>
+        </div>
       </section>
 
       <section class="ad-screen" aria-label="广告画面">

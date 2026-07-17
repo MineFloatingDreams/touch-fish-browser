@@ -186,11 +186,34 @@ body.settings-open .settings-panel { display: block; }
 .ad-preview { display: none; width: 100%; max-height: 140px; margin-top: 8px; object-fit: contain; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; }
 .ad-preview.show { display: block; }
 .security-card { color: #1e3a8a; background: #eff6ff; border-color: #bfdbfe; }
+.about-button { margin-bottom: 8px; }
 .quit-button { margin-bottom: 18px; color: #b91c1c; border-color: #fecaca; }
+
+.about-dialog {
+  position: absolute; z-index: 40; inset: 0; display: none; align-items: center; justify-content: center;
+  padding: 24px; background: rgba(15,23,42,.62); backdrop-filter: blur(5px);
+}
+.about-dialog.show { display: flex; }
+.about-card {
+  width: min(100%, 360px); padding: 24px; color: #1e293b; background: #fff; border: 1px solid #cbd5e1;
+  border-radius: 18px; box-shadow: 0 24px 70px rgba(15,23,42,.3); text-align: center;
+}
+.about-logo {
+  width: 54px; height: 54px; display: grid; place-items: center; margin: 0 auto 12px; color: #fff;
+  background: linear-gradient(145deg, #3b82f6, #4f46e5); border-radius: 16px; font-size: 24px; font-weight: 800;
+}
+.about-eyebrow { color: #2563eb; font-size: 10px; font-weight: 800; letter-spacing: .18em; }
+.about-card h2 { margin: 5px 0 3px; font-size: 21px; }
+.about-card p { margin: 10px 0; color: #64748b; font-size: 12px; line-height: 1.65; }
+.about-card .about-version { margin-top: 0; color: #334155; }
+.about-declaration { padding: 10px; color: #1e40af !important; background: #eff6ff; border-radius: 10px; }
+.about-close { width: 100%; min-height: 36px; margin-top: 6px; color: #fff; background: #2563eb; border: 0; border-radius: 9px; cursor: pointer; }
+.about-close:hover, .about-close:focus-visible { background: #1d4ed8; outline: 3px solid rgba(59,130,246,.2); }
 
 .ad-screen { position: absolute; z-index: 50; inset: 0; display: none; -webkit-app-region: drag; }
 body.ad-mode .ad-screen { display: block; }
 body.ad-mode .titlebar, body.ad-mode .browser-controls, body.ad-mode .loading-line, body.ad-mode .local-stage { visibility: hidden; }
+body.ad-mode .about-dialog { display: none; }
 .ad-carousel-image { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; background: #050505; user-select: none; pointer-events: none; }
 .ad-close-button {
   position: absolute; z-index: 2; top: 10px; right: 10px; width: 28px; height: 28px; display: grid; place-items: center;
