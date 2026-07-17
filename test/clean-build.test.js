@@ -13,7 +13,7 @@ test("构建清理只删除明确的输出文件并保留源码", async (t) => {
   await fs.mkdir(path.join(directory, "win-unpacked.tmp"));
   await fs.mkdir(path.join(directory, ".icon-ico"));
   await fs.writeFile(path.join(directory, "win-unpacked", "app.exe"), "generated");
-  await fs.writeFile(path.join(directory, "FloatingMiniBrowser-Portable-1.8.1-x64.exe"), "generated");
+  await fs.writeFile(path.join(directory, "FloatingMiniBrowser-Portable-1.8.2-x64.exe"), "generated");
   await fs.writeFile(path.join(directory, "builder-effective-config.yaml"), "generated");
   await fs.writeFile(path.join(directory, "package.json"), "source");
   await fs.mkdir(path.join(directory, "src"));
@@ -22,7 +22,7 @@ test("构建清理只删除明确的输出文件并保留源码", async (t) => {
 
   assert.deepEqual(removed.sort(), [
     ".icon-ico",
-    "FloatingMiniBrowser-Portable-1.8.1-x64.exe",
+    "FloatingMiniBrowser-Portable-1.8.2-x64.exe",
     "builder-effective-config.yaml",
     "win-unpacked",
     "win-unpacked.tmp",

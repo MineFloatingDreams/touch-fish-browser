@@ -1,0 +1,96 @@
+name: Release Windows portable
+
+on:
+  push:
+    tags:
+      - "v*.*.*"
+
+permissions:
+  contents: write
+
+concurrency:
+  group: release-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  release:
+    runs-on: windows-latest
+    timeout-minutes: 45
+
+    steps:
+      - name: Check out source
+        uses: actions/checkout@v7
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v7
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Verify release version
+        id: version
+        shell: pwsh
+        run: |
+          $version = node -p "require('./package.json').version"
+          $expectedTag = "v$version"
+          if ("${{ github.ref_name }}" -ne $expectedTag) {
+            throw "Tag ${{ github.ref_name }} does not match package version $version"
+          }
+          "version=$version" >> $env:GITHUB_OUTPUT
+          "artifact=FloatingMiniBrowser-Portable-$version-x64.exe" >> $env:GITHUB_OUTPUT
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Download and verify Electron runtime
+        shell: pwsh
+        run: |
+          $archiveName = "electron-v42.7.0-win32-x64.zip"
+          $archivePath = Join-Path "vendor/electron" $archiveName
+          Invoke-WebRequest `
+            -Uri "https://github.com/electron/electron/releases/download/v42.7.0/$archiveName" `
+            -OutFile $archivePath
+          $expectedLine = Get-Content "vendor/electron/SHA256SUMS.txt" |
+            Where-Object { $_ -match [regex]::Escape($archiveName) } |
+            Select-Object -First 1
+          if (-not $expectedLine) { throw "Missing checksum for $archiveName" }
+          $expectedHash = ($expectedLine -split "\s+")[0].ToUpperInvariant()
+          $actualHash = (Get-FileHash -Algorithm SHA256 -LiteralPath $archivePath).Hash
+          if ($actualHash -ne $expectedHash) {
+            throw "Electron archive checksum mismatch: expected $expectedHash, got $actualHash"
+          }
+
+      - name: Check syntax
+        run: npm run check
+
+      - name: Run unit tests
+        run: npm test
+
+      - name: Build portable executable
+        run: npm run build:portable
+
+      - name: Test packaged executable
+        shell: pwsh
+        run: node test/integration-smoke.mjs "build/${{ steps.version.outputs.artifact }}"
+
+      - name: Create checksum
+        shell: pwsh
+        run: |
+          $artifact = "${{ steps.version.outputs.artifact }}"
+          $artifactPath = Join-Path "build" $artifact
+          $hash = (Get-FileHash -Algorithm SHA256 -LiteralPath $artifactPath).Hash
+          "$hash  $artifact" | Set-Content -LiteralPath "$artifactPath.sha256" -Encoding ascii -NoNewline
+
+      - name: Publish GitHub Release
+        shell: pwsh
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          $artifact = "${{ steps.version.outputs.artifact }}"
+          gh release create "${{ github.ref_name }}" `
+            "build/$artifact" `
+            "build/$artifact.sha256" `
+            --verify-tag `
+            --title "Touch Fish Browser ${{ github.ref_name }}" `
+            --generate-notes `
+            --latest
