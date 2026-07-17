@@ -35,7 +35,8 @@
 - `node --test test/clean-build.test.js test/core.test.js test/settings-store.test.js`：通过，相关 14 项单元测试全部成功。
 - `npm test`：15 项中 14 项通过；唯一失败仍是既有资源校验，`build\ads` 含 `ad-11.png`～`ad-13.png`，但应用与测试清单限定为 10 张内置广告。
 - v1.8.1 源码 Electron 集成测试：通过；覆盖合并浏览栏收起/恢复、老板键两种动作，以及 electron-builder 遗留 `win-unpacked.tmp` 的打包前清理。
-- v1.8.2 自动发布工作流通过实际标签推送验证后记录运行结果。
+- v1.8.2 首次自动发布在素材测试阶段失败：8 张 `.png` 路径实际包含 JPEG 数据；未生成 Release。
+- v1.8.3 素材测试按真实文件头接受应用支持的 PNG/JPEG，并继续校验 10 张内置清单、`440×586` 尺寸和最小体积；自动发布结果见 GitHub Actions。
 - v1.6.1 便携版重新打包并完成独立集成测试：通过；打包前清理正确定位到 `build`，未再出现写入已解包 EXE 的错误。
 - Windows x64 便携版 EXE 集成测试：通过。
 - v1.4.0 便携版独立启动测试：通过；内置广告为 `1 / 10`，两张临时自定义图为 `1 / 2`。
