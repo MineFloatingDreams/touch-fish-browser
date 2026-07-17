@@ -90,3 +90,6 @@ npm run build:win
 ```
 
 依赖已精确固定为 Electron `42.7.0` 与 electron-builder `26.15.3`，实际安装版本记录在 `package-lock.json`。
+
+<!-- doc touch: formatting -->
+
